@@ -39,9 +39,9 @@
     		</tr>
     		<tr>
     			<td colspan="2" align="center">
-    				<button class="btn btn-primary btn-sm">수정</button>
-    				<button class="btn btn-warning btn-sm">삭제</button>
-    				<button class="btn btn-info btn-sm">목록</button>
+    				<a class="btn btn-primary btn-sm">수정</a>
+    				<a href="boardDelete.do/${vo.idx}" class="btn btn-warning btn-sm">삭제</a>
+    				<a href="boardList.do" class="btn btn-info btn-sm">목록</a>
     			</td>
     		</tr>
     	</table>
