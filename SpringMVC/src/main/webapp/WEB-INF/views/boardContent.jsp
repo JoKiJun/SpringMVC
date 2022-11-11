@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,25 +20,31 @@
   <div class="panel panel-default">
     <div class="panel-heading">게시판</div>
     <div class="panel-body">
-    	<table class="table table-bordered table-hover">
+    	<table class="table">
     		<tr>
-    		<td>번호</td>
-    		<td>제목</td>
-    		<td>작성자</td>
-    		<td>작성일</td>
-    		<td>조회수</td>
+    			<td>제목</td>
+    			<td>${ vo.title }</td>
     		</tr>
-    		<c:forEach var="vo" items="${ list }">
-    			<tr>
-		    		<td>${ vo.idx }</td>
-		    		<td><a href="boardContent.do?idx=${ vo.idx }">${ vo.title }</a></td>
-		    		<td>${ vo.writer }</td>
-		    		<td>${ vo.indate }</td>
-		    		<td>${ vo.count }</td>
-    			</tr>
-    		</c:forEach>
+    		<tr>
+    			<td>내용</td>
+    			<td>${fn:replace(vo.content, newLineChar, "<br/>")}</td>
+    		</tr>
+    		<tr>
+    			<td>작성자</td>
+    			<td>${ vo.writer }</td>
+    		</tr>
+    		<tr>
+    			<td>작성일</td>
+    			<td>${fn:split(vo.indate," ")[0] }</td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" align="center">
+    				<button class="btn btn-primary btn-sm">수정</button>
+    				<button class="btn btn-warning btn-sm">삭제</button>
+    				<button class="btn btn-info btn-sm">목록</button>
+    			</td>
+    		</tr>
     	</table>
-    	<a href="boardForm.do" class="btn btn-primary btn-sm" >글쓰기</a>
     </div>
     <div class="panel-footer">SpringMVC 전자정부프레임워크</div>
     </div>
