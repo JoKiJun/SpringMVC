@@ -20,31 +20,73 @@
   		$.ajax({
   			url : "boardList.do",
   			type : "get",
-  			datatype : "json",
+  			dataType : "json",
   			success : makeView,
   			error : function(){ alert("error"); }
   		});
    	}
   	function makeView(data){
-  		var listHtml = "<table class='table table-bordered'>";
-  		listHtml+="<tr>";
-  		listHtml+="<td>번호</td>";
-  		listHtml+="<td>제목</td>";
-  		listHtml+="<td>작성자</td>";
-  		listHtml+="<td>작성일</td>";
-  		listHtml+="<td>조회수</td>";
-  		listHtml+="</tr>";
+  		var listHtml="<table class='table table-bordered'>";
+  		listHtml+='<tr>';
+  		listHtml+='<td>번호</td>';
+  		listHtml+='<td>제목</td>';
+  		listHtml+='<td>작성자</td>';
+  		listHtml+='<td>작성일</td>';
+  		listHtml+='<td>조회수</td>';
+  		listHtml+='</tr>';
   		$.each(data, function(index,obj){ 
-  			listHtml+="<tr>";
-  	  		listHtml+="<td>"+obj.idx+"</td>";
-  	  		listHtml+="<td>"+obj.title+"</td>";
-  	  		listHtml+="<td>"+obj.writer+"</td>";
-  	  		listHtml+="<td>"+obj.indate+"</td>";
-  	  		listHtml+="<td>"+obj.count"</td>";
-  	  		listHtml+="</tr>";
+  			listHtml+='<tr>';
+  	  		listHtml+='<td>'+obj.idx+'</td>';
+  	  		listHtml+="<td><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
+  	  		listHtml+='<td>'+obj.writer+'</td>';
+  	  		listHtml+='<td>'+obj.indate+'</td>';
+  	  		listHtml+='<td>'+obj.count+'</td>';
+  	  		listHtml+='</tr>';
+  	  		
+  	  	listHtml+="<tr id='c"+obj.idx+"' style='display: none'>";
+  	  	listHtml+='<td>내용</td>';
+  	  	listHtml+="<td colspan='4'>";
+  	  	listHtml+="<textarea rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	   	listHtml+='</td>';
+  	  	listHtml+='</tr>';
   		});
-  		listHtml+="</table>";
-  		$("#view").html(listHtml);
+  		
+  		listHtml+='<tr>';
+  		listHtml+="<td colspan='5'>";
+  		listHtml+="<button class='btn btn-primary btn-sm' onclick='goForm()'>글쓰기</button>";
+  		listHtml+='</td>';
+  		listHtml+='</tr>';
+  		
+  		listHtml+='</table>';
+  		$('#view').html(listHtml);
+  		
+  		$('#view').css('display','block'); // 감추기
+  		$('#wform').css('display','none'); // 보이기
+  	}
+  	function goForm(){
+  		$('#view').css('display','none'); // 감추기
+  		$('#wform').css('display','block'); // 보이기
+  	}
+  	function goList(){
+  		$('#view').css('display','block'); // 감추기
+  		$('#wform').css('display','none'); // 보이기
+  	}
+  	function goInsert(){
+  		
+  		var fData = $('#frm').serialize();
+  		
+  		$.ajax({
+  			url : "boardInsert.do",
+  			type : "post",
+  			data : fData,
+  			success : loadList,
+  			error : function(){ alert('error'); }
+  		});
+  		// 초기화
+  		$('#clear').trigger('click');
+  	}
+  	function goContent(idx){
+  		$('#c'+idx).css('display','table-row'); // 보이기
   	}
   </script>
 </head>
@@ -55,6 +97,31 @@
   <div class="panel panel-default">
     <div class="panel-heading">게시판</div>
     <div class="panel-body" id="view">Panel Content</div>
+    <div class="panel-body" id="wform" style="display: none">
+    <form id="frm">
+    	<table	class="table">
+    		<tr>
+    			<td>제목</td>
+    			<td><input type="text" id="title" name="title" class="form-control"/></td>
+    		</tr>
+    		<tr>
+    			<td>내용</td>
+    			<td><textarea rows="7" id="content" class="form-control" name="content"></textarea></td>
+    		</tr>
+    		<tr>
+    			<td>작성자</td>
+    			<td><input type="text" id="writer" name="writer" class="form-control"/></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" align="right">
+    				<button type="submit" class="btn btn-success btn-sm" onclick="goInsert()">등록</button>
+    				<button type="reset" class="btn btn-warning btn-sm" id="clear">취소</button>
+    				<button type="button" class="btn btn-info btn-sm" onclick="goList()">목록</button>
+    			</td>
+    		</tr>
+    	</table>
+   	</form>
+    </div>
     <div class="panel-footer">SpringMVC 전자정부프레임워크</div>
     </div>
 </div>
